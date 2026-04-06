@@ -1,29 +1,3 @@
-// function WeatherCard({ text, icon }) {
-//   return (
-//     <div
-//       style={{
-//         padding: "10px",
-//         margin: "5px",
-//         display: "flex",
-//         flexWrap:"flex-wrap",
-//         flexDirection: "row",
-//         justifyContent: "center",
-//         alignItems: "center",
-//         gap: "12px",
-//         border: "1px solid blue",
-//         borderRadius: "12px",
-//       }}
-//     >
-//       <div >
-//         <img src={icon} />
-//       <p className="text-center">{text}</p>
-//       </div>
-
-//     </div>
-//   );
-// }
-
-// export default WeatherCard;
 import AnimatedWeather from "./AnimatedWeather";
 import { motion } from "framer-motion";
 

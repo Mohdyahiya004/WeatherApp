@@ -167,6 +167,7 @@ export default function Weather() {
         city={weather?.location?.name || "Mumbai"}
         darkMode={darkMode}
       />
+      
     </div>
   );
 }
