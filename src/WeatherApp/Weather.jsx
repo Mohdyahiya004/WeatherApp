@@ -7,6 +7,9 @@ import WeatherCard from "./WeatherCard";
 import { motion } from "framer-motion";
 
 export default function Weather() {
+  const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
+
+
   const [city, setCity] = useState("");
   const [cityDebounce] = useDebounce(city, 500);
   const [weather, setWeather] = useState({});
@@ -16,7 +19,7 @@ export default function Weather() {
   const fetchWeather = async (currentCity) => {
     try {
       const res = await fetch(
-        `https://api.weatherapi.com/v1/current.json?key=7aaa3c7e6d3d4bfca28123208250909&q=${currentCity}&aqi=no`
+        `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${currentCity}&aqi=no`
       );
       const data = await res.json();
       setWeather(data);
@@ -28,7 +31,7 @@ export default function Weather() {
   const fetchSuggestion = async () => {
     try {
       const res = await fetch(
-        `https://api.weatherapi.com/v1/search.json?key=7aaa3c7e6d3d4bfca28123208250909&q=${cityDebounce}`
+        `https://api.weatherapi.com/v1/search.json?key=${API_KEY}&q=${cityDebounce}`
       );
       const data = await res.json();
       setSuggestion(data);
@@ -164,6 +167,7 @@ export default function Weather() {
         city={weather?.location?.name || "Mumbai"}
         darkMode={darkMode}
       />
+      
     </div>
   );
 }
