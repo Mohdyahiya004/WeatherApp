@@ -9,17 +9,18 @@ import { motion } from "framer-motion";
 export default function Weather() {
   const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
-
   const [city, setCity] = useState("");
   const [cityDebounce] = useDebounce(city, 500);
   const [weather, setWeather] = useState({});
   const [suggestion, setSuggestion] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
 
+  const [skipSuggestionFetch, setSkipSuggestionFetch] = useState(false);
+
   const fetchWeather = async (currentCity) => {
     try {
       const res = await fetch(
-        `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${currentCity}&aqi=no`
+        `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${currentCity}&aqi=no`,
       );
       const data = await res.json();
       setWeather(data);
@@ -31,7 +32,7 @@ export default function Weather() {
   const fetchSuggestion = async () => {
     try {
       const res = await fetch(
-        `https://api.weatherapi.com/v1/search.json?key=${API_KEY}&q=${cityDebounce}`
+        `https://api.weatherapi.com/v1/search.json?key=${API_KEY}&q=${cityDebounce}`,
       );
       const data = await res.json();
       setSuggestion(data);
@@ -43,9 +44,15 @@ export default function Weather() {
   useEffect(() => {
     fetchWeather("Mumbai");
   }, []);
+
   useEffect(() => {
+    if (skipSuggestionFetch) {
+      setSkipSuggestionFetch(false);
+      return;
+    }
     if (city) fetchSuggestion();
   }, [cityDebounce]);
+
   useEffect(() => {
     AOS.init({ duration: 1500, once: true });
   }, []);
@@ -100,6 +107,7 @@ export default function Weather() {
         />
         <button
           onClick={() => {
+            setSkipSuggestionFetch(true)
             fetchWeather(city);
             setSuggestion([]);
           }}
@@ -116,9 +124,10 @@ export default function Weather() {
             <li
               key={item.id || item.name}
               onClick={() => {
+                setSkipSuggestionFetch(true)
                 setCity(`${item.name}, ${item.country}`);
-                setSuggestion([]);
                 fetchWeather(`${item.name}, ${item.country}`);
+                setSuggestion([]);
               }}
               className="cursor-pointer w-full text-center px-4 py-2 my-1 rounded-md bg-gray-200 dark:bg-gray-500 dark:hover:text-black hover:text-red-600 transition"
             >
@@ -167,7 +176,6 @@ export default function Weather() {
         city={weather?.location?.name || "Mumbai"}
         darkMode={darkMode}
       />
-      
     </div>
   );
 }
